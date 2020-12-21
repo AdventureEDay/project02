@@ -15,7 +15,7 @@
             </el-radio-group>
           </el-col>
         </el-row>
-        <el-row class="options">
+        <!-- <el-row class="options">
           <el-col :span="10"> <i>k</i> of <i>k</i>-nucleotide: </el-col>
           <el-col :span="14">
             <el-radio-group v-model="kValue" @change="passK()">
@@ -24,7 +24,7 @@
               <el-radio label="3">3</el-radio>
             </el-radio-group>
           </el-col>
-        </el-row>
+        </el-row> -->
       </el-aside>
       <el-main>
         <div class="insert">
@@ -48,7 +48,6 @@
             v-else-if="$route.params.type === 'yeast'"
           ></iframe>
         </div>
-        <el-button type="warning" @click="getInput()">getInput</el-button>
       </el-main>
     </el-container>
   </div>
