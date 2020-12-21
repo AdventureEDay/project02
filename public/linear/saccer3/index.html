@@ -1,0 +1,138 @@
+<html>
+
+<head>
+  <script src="../jbrowse-linear-view.js"></script>
+</head>
+
+<body>
+  <!-- <h1>We're using JBrowse Linear View!</h1> -->
+  <div id="jbrowse_linear_view"></div>
+  <button data-type="gene_button" data-location="chrII:100..200">
+    CYP2C19
+  </button>
+  <button data-type="gene_button" data-location="chrIII:120..220">
+    BRCA2
+  </button>
+  <script type="module">
+    import assembly from './assembly.js'
+    import tracks from './tracks.js'
+
+    // 添加一个默认展开的track和参考序列
+    let defaultSession = {
+      name: 'aNameHere', // what the name is doesn't really matter
+      view: {
+        "id": "linearGenomeView",
+        "type": "LinearGenomeView",
+        "bpPerPx": 0.080,
+        "displayedRegions": [
+          {
+            "refName": "chrI",
+            "start": 0,
+            "end": 100000,
+            "reversed": false,
+            "assemblyName": "SacCer_Apr2011"
+          }
+        ],
+        "tracks": [{
+          "id": "ReferenceSequence",
+          "type": "ReferenceSequenceTrack",
+          "height": 50,
+          "configuration": "SacCer_Apr2011-ReferenceSequenceTrack" 
+        },
+        {
+          "id": "chrI_MD0001_EIIP",
+          "type": "WiggleTrack",
+          "height": 150,
+          "configuration": "chrI_MD0001_EIIP" // tracks.js文件中的trackID
+        }]
+      },
+    }
+    // 创建一个线性视图
+    let k=1;
+    let genomeView = new JBrowseLinearView({
+      container: document.getElementById('jbrowse_linear_view'),
+      assembly,
+      tracks,
+      // location: 'chrI:100,000..100,100',
+      defaultSession,
+      onChange: patch => {
+        // genomeView.view.navToLocString("1:100..600"); // 在这里不能对genomeView进行处理，因为这个时候还没有new完成
+        console.log(k++, JSON.stringify(patch))  
+      },
+    })
+
+    // 为了动态选择tracks，创建新视图的函数
+    function newView(tracks) {
+      let genomeView = new JBrowseLinearView({
+        container: document.getElementById('jbrowse_linear_view'),
+        assembly,
+        tracks,
+        location: 'chrI:100,000..100,100'
+      })
+      return genomeView;
+    }
+
+    // 根据值的类型改变tracks
+    let valueType = "original"
+    let kValue = "1"
+    let chromName = ""  // 染色体名称
+    window.addEventListener("message", function (messageEvent) {
+      let params = messageEvent.data.data;
+      valueType = params["valueType"] == undefined ? valueType : params["valueType"];
+      kValue = params["kValue"] == undefined ? kValue : params["kValue"];
+      // console.log(valueType);
+      // console.log(kValue);
+      changeTrack(valueType, kValue);
+    }, false);
+
+    function changeTrack(valueType, kValue) {
+      if (valueType == "original") {
+        if (kValue == "1") {
+          import("./tracks/tracks_ori_mono.js").then(track => {
+            // genomeView.tracks = track.default;
+            newView(track.default)
+          });
+        } else if (kValue == "2") {
+          import("./tracks/tracks_ori_di.js").then(track => {
+            // genomeView.tracks = track.default;
+            newView(track.default)
+          });
+        } else {
+          import("./tracks/tracks_ori_tri.js").then(track => {
+            // genomeView.tracks = track.default;
+            newView(track.default)
+          });
+        }
+      } else if (valueType == "standard") {
+        if (kValue == "1") {
+          import("./tracks/tracks_sta_mono.js").then(track => {
+            // genomeView.tracks = track.default;
+            newView(track.default)
+          });
+        } else if (kValue == "2") {
+          import("./tracks/tracks_sta_di.js").then(track => {
+            // genomeView.tracks = track.default;
+            newView(track.default)
+          });
+        } else {
+          import("./tracks/tracks_sta_tri.js").then(track => {
+            // genomeView.tracks = track.default;
+            newView(track.default)
+          });
+        }
+      }
+    }
+
+    function navTo(event) {
+      genomeView.view.navToLocString(event.target.dataset.location)
+    }
+    const buttons = document.getElementsByTagName('button')
+    for (const button of buttons) {
+      if (button.dataset.type === 'gene_button') {
+        button.addEventListener('click', navTo)
+      }
+    }
+  </script>
+</body>
+
+</html>
