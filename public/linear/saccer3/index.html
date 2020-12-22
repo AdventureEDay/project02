@@ -6,107 +6,85 @@
 
 <body>
   <div id="jbrowse_linear_view"></div>
-  <button id="changeChrom">changeChrom</button>
   <script type="module">
-    import assembly from './assembly.js'
-    // import tracks from './tracks.js'
+    import assembly from './assemblies/chrI.js'
+    import tracks from './tracks/ori/tracks_ori_chrI.js'
 
-    let tracks = [{
-      type: "WiggleTrack",
-      trackId: "chrI_MD0001_EIIP",
-      name: "chrI_MD0001_EIIP_original",
-      category: ["EIIP"],
-      assemblyNames: ["SacCer_Apr2011"],
-      adapter: {
-        type: "BigWigAdapter",
-        bigWigLocation: {
-          uri: "/file/saccer3/tracks/monoDNAOri/chrI_MD0001_EIIP.bw"
-        }
-      }
-    },
-    {
-      type: "WiggleTrack",
-      trackId: "chrIII_MD0001_EIIP",
-      name: "chrIII_MD0001_EIIP_original",
-      category: ["EIIP"],
-      assemblyNames: ["SacCer_Apr2011"],
-      adapter: {
-        type: "BigWigAdapter",
-        bigWigLocation: {
-          uri: "/file/saccer3/tracks/monoDNAOri/chrIII_MD0001_EIIP.bw"
-        }
-      }
-    },
-    {
-      type: "WiggleTrack",
-      trackId: "chrII_MD0001_EIIP",
-      name: "chrII_MD0001_EIIP_original",
-      category: ["EIIP"],
-      assemblyNames: ["SacCer_Apr2011"],
-      adapter: {
-        type: "BigWigAdapter",
-        bigWigLocation: {
-          uri: "/file/saccer3/tracks/monoDNAOri/chrII_MD0001_EIIP.bw"
-        }
-      }
-    },
-    {
-      type: "WiggleTrack",
-      trackId: "chrIV_MD0001_EIIP",
-      name: "chrIV_MD0001_EIIP_original",
-      category: ["EIIP"],
-      assemblyNames: ["SacCer_Apr2011"],
-      adapter: {
-        type: "BigWigAdapter",
-        bigWigLocation: {
-          uri: "/file/saccer3/tracks/monoDNAOri/chrIV_MD0001_EIIP.bw"
-        }
-      }
-    }]
-
-    // 创建一个线性视图
-    let chromName = ""  // 染色体名称
-    let k = 1;
+    let defaultSession = {
+      name: 'aNameHere', // what the name is doesn't really matter
+      view: {
+        "id": "linearGenomeView",
+        "type": "LinearGenomeView",
+        "bpPerPx": 0.080,
+        "displayedRegions": [
+          {
+            "refName": "chrI",
+            "start": 0,
+            "end": 100000,
+            "reversed": false,
+            "assemblyName": "SacCer_Apr2011_chrI"
+          }
+        ],
+        "tracks": [{
+          "id": "ReferenceSequence",
+          "type": "ReferenceSequenceTrack",
+          "height": 50,
+          "configuration": "SacCer_Apr2011_chrI-ReferenceSequenceTrack" 
+        },
+        {
+          "id": "chrI_MD0001_EIIP_ori",
+          "type": "WiggleTrack",
+          "height": 150,
+          "configuration": "chrI_MD0001_EIIP_ori" // tracks.js文件中的trackID
+        }]
+      },
+    }
+    // 使用defaultSession创建一个线性视图
     let genomeView = new JBrowseLinearView({
       container: document.getElementById('jbrowse_linear_view'),
       assembly,
       tracks,
-      location: 'chrI:100,000..100,100',
-      onChange: patch => {
-        // genomeView.view.navToLocString("1:100..600"); // 在这里不能对genomeView进行处理，因为这个时候还没有new完成
-        // console.log(k++, JSON.stringify(patch)) 
-        // 如果更换染色体 操作是"add" 并且 path 是"/session/view/displayedRegions/0"
-        if (patch["op"] == "add" && patch["path"] == "/session/view/displayedRegions/0") {
-          console.log(k++, JSON.stringify(patch));
-          chromName = patch["value"].refName;
-        }
-      },
+      defaultSession
     });
 
-
+    function newView(assembly, tracks, location) {
+      let genomeView = new JBrowseLinearView({
+        container: document.getElementById('jbrowse_linear_view'),
+        assembly,
+        tracks,
+        location
+      });
+    }
     // 根据值的类型改变tracks
     let valueType = "original"
-    // let kValue = "1"
+    let chromName = "chrI"  // 染色体名称 chrI
     window.addEventListener("message", function (messageEvent) {
       let params = messageEvent.data.data;
       valueType = params["valueType"] == undefined ? valueType : params["valueType"];
-      console.log(genomeView.view);
+      chromName = params["chromName"] == undefined ? chromName : params["chromName"];
+      console.log(valueType, chromName);
+      let location = chromName + ":10,000..10,100"
+      changeTrack(valueType, chromName, location)
     }, false);
 
-
-    function changeTrack(valueType, chromName) {
-      // console.log(genomeView.view)
+    function changeTrack(valueType, chromName, location) {
+      let assemblies = "./assemblies/" + chromName + ".js";
       if (valueType == "original") {
-        import("./tracks/tracks_ori_mono.js").then(track => {
-          // genomeView.tracks = track.default;
-          let location = chromName + ":100,000..100,100"
-          newView(track.default, location)
-        });
+        let tracks = "./tracks/ori/tracks_ori_"+ chromName +".js";
+        import(assemblies).then(assembly => {
+          import(tracks).then(track => {
+            // genomeView.tracks = track.default;
+            newView(assembly.default, track.default, location)
+          });
+        })
       } else {
-        import("./tracks/tracks_ori_tri.js").then(track => {
-          // genomeView.tracks = track.default;
-          newView(track.default)
-        });
+        let tracks = "./tracks/sta/tracks_sta_" + chromName + ".js";
+        import(assemblies).then(assembly => {
+          import(tracks).then(track => {
+            // genomeView.tracks = track.default;
+            newView(assembly.default, track.default, location)
+          });
+        })
       }
     }
   </script>

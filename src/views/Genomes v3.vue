@@ -5,67 +5,30 @@
     <el-container>
       <el-aside>
         <el-row class="options">
-          <el-col :span="12">
+          <el-col :span="10">
             Type of property values:
           </el-col>
-          <el-col :span="12">
-            <el-radio-group v-model="valueType" @change="passV">
+          <el-col :span="14">
+            <el-radio-group v-model="valueType" @change="passV()">
               <el-radio-button label="original">Original</el-radio-button>
               <el-radio-button label="standard">Standard</el-radio-button>
             </el-radio-group>
           </el-col>
         </el-row>
-        <el-row class="options">
-          <el-col :span="12">Values by chromosome:</el-col>
-          <el-col :span="12">
-            <el-select
-              v-if="$route.params.type === 'human'"
-              v-model="chromHum"
-              placeholder="please select"
-              @change="passChrom"
-            >
-              <el-option
-                v-for="item in optionsHum"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-            <el-select
-              v-if="$route.params.type === 'mouse'"
-              v-model="chromMou"
-              placeholder="please select"
-              @change="passChrom"
-            >
-              <el-option
-                v-for="item in optionsMou"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-            <el-select
-              v-if="$route.params.type === 'yeast'"
-              v-model="chromYea"
-              placeholder="please select"
-              @change="passChrom"
-            >
-              <el-option
-                v-for="item in optionsYea"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
+        <!-- <el-row class="options">
+          <el-col :span="10"> <i>k</i> of <i>k</i>-nucleotide: </el-col>
+          <el-col :span="14">
+            <el-radio-group v-model="kValue" @change="passK()">
+              <el-radio label="1">1</el-radio>
+              <el-radio label="2">2</el-radio>
+              <el-radio label="3">3</el-radio>
+            </el-radio-group>
           </el-col>
-        </el-row>
+        </el-row> -->
       </el-aside>
       <el-main>
         <div class="insert">
-          <!-- <h1>{{ valueType }}</h1> -->
+          <h1>{{ valueType }}</h1>
           <iframe
             ref="params"
             src="/linear/hg38/index.html"
@@ -98,79 +61,7 @@ export default {
       // 减160是减去页眉和页脚的高度和
       fullHeight: window.innerHeight - 160,
       valueType: "original",
-      chromHum: "chr1",
-      optionsHum: [
-        "chr1",
-        "chr2",
-        "chr3",
-        "chr4",
-        "chr5",
-        "chr6",
-        "chr7",
-        "chr8",
-        "chr9",
-        "chr10",
-        "chr11",
-        "chr12",
-        "chr13",
-        "chr14",
-        "chr15",
-        "chr16",
-        "chr17",
-        "chr18",
-        "chr19",
-        "chr20",
-        "chr21",
-        "chr22",
-        "chrX",
-        "chrY",
-        "chrM"
-      ],
-      chromMou: "chr1",
-      optionsMou: [
-        "chr1",
-        "chr2",
-        "chr3",
-        "chr4",
-        "chr5",
-        "chr6",
-        "chr7",
-        "chr8",
-        "chr9",
-        "chr10",
-        "chr11",
-        "chr12",
-        "chr13",
-        "chr14",
-        "chr15",
-        "chr16",
-        "chr17",
-        "chr18",
-        "chr19",
-        "chrX",
-        "chrY",
-        "chrM"
-      ],
-      chromYea: "chrI",
-      optionsYea: [
-        "chrI",
-        "chrII",
-        "chrIII",
-        "chrIV",
-        "chrV",
-        "chrVI",
-        "chrVII",
-        "chrVIII",
-        "chrIX",
-        "chrX",
-        "chrXI",
-        "chrXII",
-        "chrXIII",
-        "chrXIV",
-        "chrXV",
-        "chrXVI",
-        "chrM"
-      ]
+      kValue: "1"
     };
   },
   mounted() {
@@ -198,13 +89,7 @@ export default {
       // eslint-disable-next-line no-unused-vars
       handler: function(val, oldVal) {
         this.valueType = "original";
-        if (val === "human") {
-          this.chromHum = "chr1";
-        } else if (val === "mouse") {
-          this.chromMou = "chr1";
-        } else {
-          this.chromYea = "chrI";
-        }
+        this.kValue = "1";
       },
       // 深度观察监听
       deep: true
@@ -229,14 +114,14 @@ export default {
       );
     },
 
-    passV(val) {
-      // let val = this.valueType;
-      // console.log(val);
+    passV() {
+      let val = this.valueType;
       this.sendParams({ valueType: val });
     },
 
-    passChrom(val) {
-      this.sendParams({ chromName: val });
+    passK() {
+      let val = this.kValue;
+      this.sendParams({ kValue: val });
     }
   },
   //注销window.onresize事件
@@ -246,7 +131,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style>
 .genomes {
   height: 100%;
 }
@@ -287,14 +172,23 @@ export default {
   /* line-height: 160px; */
 }
 
-/deep/ .el-input {
-  width: 188px;
-}
-
-/deep/ .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+.el-radio-button__orig-radio:checked + .el-radio-button__inner {
   color: #fff;
   background-color: #f3c649;
   border-color: #f3c649;
   box-shadow: -1px 0 0 0 #f3c649;
+}
+
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: #f3c649;
+  background: #f3c649;
+}
+
+.el-radio__input.is-checked + .el-radio__label {
+  color: #f3c649;
+}
+
+.el-radio__label {
+  font-size: 16px;
 }
 </style>
