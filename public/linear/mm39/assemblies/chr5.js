@@ -1,18 +1,18 @@
 export default {
-  name: "SacCer_Apr2011_chrIX",
+  name: "GRCm39_chr5",
   sequence: {
     type: "ReferenceSequenceTrack",
-    trackId: "SacCer_Apr2011_chrIX-ReferenceSequenceTrack",
+    trackId: "GRCm39_chr5-ReferenceSequenceTrack",
     adapter: {
       type: "BgzipFastaAdapter",
       fastaLocation: {
-        uri: "/file/saccer3/chrIX.fa.gz"
+        uri: "/file/mm39/chr5.fa.gz"
       },
       faiLocation: {
-        uri: "/file/saccer3/chrIX.fa.gz.fai"
+        uri: "/file/mm39/chr5.fa.gz.fai"
       },
       gziLocation: {
-        uri: "/file/saccer3/chrIX.fa.gz.gzi"
+        uri: "/file/mm39/chr5.fa.gz.gzi"
       }
     }
   }
