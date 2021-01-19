@@ -52,10 +52,7 @@ a {
 }
 
 .el-submenu__title {
-  font-size: 18px !important;
+  font-size: 16px !important;
   font-weight: bold !important;
 }
-/* .el-submenu [class^="el-icon-"] {
-  font-size: 14px !important;
-} */
 </style>

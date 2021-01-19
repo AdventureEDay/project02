@@ -89,7 +89,7 @@ export default {
 }
 
 .home {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 }
 
@@ -111,7 +111,7 @@ export default {
 
 .github a {
   color: rgb(255, 255, 255);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   /* font-style: italic; */
 }

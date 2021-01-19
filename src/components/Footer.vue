@@ -46,7 +46,7 @@ export default {
   padding: 0;
   margin: 0;
   background-color: #545c64;
-  height: 100px;
+  height: 60px;
   /* height: 60px; // 加上这句会出错,当页脚固定在底部时，文字不能垂直居中 */
 }
 
@@ -54,7 +54,7 @@ export default {
   /* height: 90px; */
   padding: 0; /*重要*/
   margin: 0; /*重要*/
-  line-height: 100px;
+  line-height: 60px;
   color: white;
 }
 </style>

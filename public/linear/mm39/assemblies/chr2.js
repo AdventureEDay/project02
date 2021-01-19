@@ -1,20 +1,19 @@
 export default {
-  name: "GRCm39",
+  name: "GRCm39_chr2",
   sequence: {
     type: "ReferenceSequenceTrack",
-    trackId: "GRCm39-ReferenceSequenceTrack",
+    trackId: "GRCm39_chr2-ReferenceSequenceTrack",
     adapter: {
       type: "BgzipFastaAdapter",
       fastaLocation: {
-        uri: "/file/mm39/mm39.fa.gz"
+        uri: "/file/mm39/chr2.fa.gz"
       },
       faiLocation: {
-        uri: "/file/mm39/mm39.fa.gz.fai"
+        uri: "/file/mm39/chr2.fa.gz.fai"
       },
       gziLocation: {
-        uri: "/file/mm39/mm39.fa.gz.gzi"
+        uri: "/file/mm39/chr2.fa.gz.gzi"
       }
     }
-  },
-  aliases: ["mm39"]
+  }
 };

@@ -10,21 +10,23 @@
     import assembly from './assemblies/chrI.js'
     import tracks from './tracks/ori/tracks_ori_chrI.js'
 
+    // 如果设置了defaultSession的"displayedRegions"，可调节位置就变成了设置的start和end之间的区域,
+    // 所以在default中不设置displaedRegions,在new新视图的时候加上location选项
     let defaultSession = {
       name: 'aNameHere', // what the name is doesn't really matter
       view: {
         "id": "linearGenomeView",
         "type": "LinearGenomeView",
         "bpPerPx": 0.080,
-        "displayedRegions": [
-          {
-            "refName": "chrI",
-            "start": 0,
-            "end": 100000,
-            "reversed": false,
-            "assemblyName": "SacCer_Apr2011_chrI"
-          }
-        ],
+        // "displayedRegions": [
+        //   {
+        //     "refName": "chrI",
+        //     "start": 0,
+        //     "end": 1000000,
+        //     "reversed": false,
+        //     "assemblyName": "SacCer_Apr2011_chrI"
+        //   }
+        // ],
         "tracks": [{
           "id": "ReferenceSequence",
           "type": "ReferenceSequenceTrack",
@@ -44,7 +46,8 @@
       container: document.getElementById('jbrowse_linear_view'),
       assembly,
       tracks,
-      defaultSession
+      defaultSession,
+      location: 'chrI:100,000..100,100',
     });
 
     function newView(assembly, tracks, location) {

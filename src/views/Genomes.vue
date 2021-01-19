@@ -1,14 +1,18 @@
 <template>
-  <div class="genomes" :style="'height:' + fullHeight + 'px'">
+  <div class="genomes">
+    <!-- :style="'height:' + fullHeight + 'px'" -->
     <!-- <h1>This is {{ $route.params.type }} page</h1> -->
     <!-- <el-button @click="tiao()">linear</el-button> -->
     <el-container>
       <el-aside>
+        <div style="height: 50px; margin:10px 0 10px">
+          <img style="height: 50px; width: auto" src="../assets/para.png" />
+        </div>
         <el-row class="options">
-          <el-col :span="12">
+          <el-col class="label">
             Type of property values:
           </el-col>
-          <el-col :span="12">
+          <el-col class="content">
             <el-radio-group v-model="valueType" @change="passV">
               <el-radio-button label="original">Original</el-radio-button>
               <el-radio-button label="standard">Standard</el-radio-button>
@@ -16,8 +20,8 @@
           </el-col>
         </el-row>
         <el-row class="options">
-          <el-col :span="12">Values by chromosome:</el-col>
-          <el-col :span="12">
+          <el-col class="label">Values by chromosome:</el-col>
+          <el-col class="content">
             <el-select
               v-if="$route.params.type === 'human'"
               v-model="chromHum"
@@ -95,8 +99,8 @@ export default {
   name: "Genomes",
   data() {
     return {
-      // 减160是减去页眉和页脚的高度和
-      fullHeight: window.innerHeight - 160,
+      // 减160是减去页眉和页脚的高度
+      fullHeight: window.innerHeight - 120,
       valueType: "original",
       chromHum: "chr1",
       optionsHum: [
@@ -198,11 +202,11 @@ export default {
       // eslint-disable-next-line no-unused-vars
       handler: function(val, oldVal) {
         this.valueType = "original";
-        if (val === "human") {
+        if (val.params.type === "human") {
           this.chromHum = "chr1";
-        } else if (val === "mouse") {
+        } else if (val.params.type === "mouse") {
           this.chromMou = "chr1";
-        } else {
+        } else if (val.params.type === "yeast") {
           this.chromYea = "chrI";
         }
       },
@@ -216,7 +220,7 @@ export default {
     //   window.location.href = "/linear/index.html";
     // }
     get_browseHeight() {
-      this.fullHeight = window.innerHeight - 160;
+      this.fullHeight = window.innerHeight - 120;
     },
 
     sendParams(val) {
@@ -276,9 +280,9 @@ export default {
   background-color: #e6e6d3;
   color: #333;
   line-height: 50px;
-  text-align: left;
-  padding-left: 15px;
-  padding-top: 20px;
+  // text-align: left;
+  // padding-left: 15px;
+  // padding-top: 20px;
 }
 
 .el-main {
@@ -287,14 +291,25 @@ export default {
   /* line-height: 160px; */
 }
 
+.label {
+  text-align: left;
+  padding-left: 15px;
+  background-color: #a5c2a0;
+  border-radius: 10px;
+}
+
+.content {
+  margin: 10px 0 10px;
+}
+
 /deep/ .el-input {
   width: 188px;
 }
 
-/deep/ .el-radio-button__orig-radio:checked + .el-radio-button__inner {
-  color: #fff;
-  background-color: #f3c649;
-  border-color: #f3c649;
-  box-shadow: -1px 0 0 0 #f3c649;
-}
+// /deep/ .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+//   color: #fff;
+//   background-color: #f3c649;
+//   border-color: #f3c649;
+//   box-shadow: -1px 0 0 0 #f3c649;
+// }
 </style>
